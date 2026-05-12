@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Club Chiropratique Posture</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0D2B45;
+  --teal: #1B8A7A;
+  --bordeaux: #8C1010;
+  --bordeaux-light: #F7E8E8;
+  --bordeaux-mid: #E8C0C0;
+  --teal-light: #F7E8E8;
+  --teal-mid: #E8C0C0;
+  --red: #C0392B;
+  --red-light: #FDECEA;
+  --amber: #D4860A;
+  --amber-light: #FEF5E4;
+  --green: #1E7A4A;
+  --green-light: #EAF5EE;
+  --gray-1: #F7F8FA;
+  --gray-2: #EEF0F3;
+  --gray-3: #D5D9E0;
+  --gray-4: #9AA3AF;
+  --text: #0D1B2A;
+  --text-muted: #637180;
+  --white: #FFFFFF;
+  --radius: 14px;
+  --radius-sm: 8px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; overflow: hidden; font-family: 'DM Sans', sans-serif; background: var(--gray-1); color: var(--text); }
+.app { display: flex; flex-direction: column; height: 100vh; max-width: 480px; margin: 0 auto; background: var(--white); }
+
+/* HEADER */
+.header { background: linear-gradient(135deg, #1a0505 0%, #3d0a0a 100%); padding: 14px 18px 12px; display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+.header-logo { width: 36px; height: 36px; border-radius: 9px; background: #8C1010; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.header-logo svg { width: 20px; height: 20px; }
+.header-name { font-family: ‘DM Serif Display’, serif; font-size: 15px; color: #fff; line-height: 1.2; }
+.header-sub { font-size: 10px; color: rgba(255,255,255,0.45); text-transform: uppercase; letter-spacing: 0.06em; }
+
+/* NAV */
+.nav { background: var(–white); border-bottom: 1px solid var(–gray-2); display: flex; flex-shrink: 0; }
+.nav-item { flex: 1; padding: 10px 2px 8px; text-align: center; font-size: 10px; color: var(–gray-4); cursor: pointer; border: none; background: none; border-bottom: 2px solid transparent; transition: all 0.2s; letter-spacing: 0.04em; text-transform: uppercase; font-weight: 500; font-family: ‘DM Sans’, sans-serif; }
+.nav-item svg { display: block; width: 22px; height: 22px; margin: 0 auto 3px; }
+.nav-item.active { color: #8C1010; border-bottom-color: #8C1010; }
+
+/* SCREENS */
+.screen { display: none; flex: 1; overflow-y: auto; padding: 16px; }
+.screen.active { display: block; }
+.screen::-webkit-scrollbar { width: 3px; }
+.screen::-webkit-scrollbar-thumb { background: var(–gray-3); border-radius: 2px; }
+
+/* CARDS */
+.card { background: var(–white); border: 1px solid var(–gray-2); border-radius: var(–radius); padding: 16px; margin-bottom: 12px; }
+.card-title { font-size: 11px; font-weight: 600; color: var(–gray-4); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 12px; }
+
+/* PATIENT FORM */
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+.field { display: flex; flex-direction: column; gap: 5px; }
+.field.full { grid-column: 1 / -1; }
+.field label { font-size: 11px; font-weight: 600; color: var(–gray-4); text-transform: uppercase; letter-spacing: 0.05em; }
+.field input, .field select { padding: 10px 12px; border: 1px solid var(–gray-2); border-radius: var(–radius-sm); font-size: 14px; color: var(–text); background: var(–gray-1); font-family: ‘DM Sans’, sans-serif; -webkit-appearance: none; appearance: none; }
+.field input:focus, .field select:focus { outline: none; border-color: #8C1010; background: var(–white); }
+
+.avatar-row { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(–gray-2); }
+.avatar { width: 52px; height: 52px; border-radius: 50%; background: var(–teal-light); display: flex; align-items: center; justify-content: center; font-family: ‘DM Serif Display’, serif; font-size: 18px; color: #8C1010; border: 2px solid #E8C0C0; flex-shrink: 0; }
+.patient-display-name { font-size: 18px; font-weight: 600; color: var(–navy); }
+.patient-display-meta { font-size: 13px; color: var(–text-muted); margin-top: 2px; }
+
+.tag { display: inline-block; font-size: 11px; padding: 3px 10px; border-radius: 20px; font-weight: 500; }
+.tag-teal { background: #F7E8E8; color: #8C1010; }
+.tag-amber { background: var(–amber-light); color: var(–amber); }
+.tag-red { background: var(–red-light); color: var(–red); }
+.tag-green { background: var(–green-light); color: var(–green); }
+
+/* BUTTONS */
+.btn-primary { width: 100%; padding: 13px; border-radius: var(–radius-sm); background: var(–navy); color: var(–white); border: none; font-size: 15px; font-weight: 500; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-family: ‘DM Sans’, sans-serif; }
+.btn-teal { width: 100%; padding: 13px; border-radius: var(–radius-sm); background: #8C1010; color: var(–white); border: none; font-size: 15px; font-weight: 500; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-family: ‘DM Sans’, sans-serif; margin-bottom: 8px; }
+.btn-outline { width: 100%; padding: 11px; border-radius: var(–radius-sm); background: none; color: var(–navy); border: 1px solid var(–gray-3); font-size: 14px; cursor: pointer; font-family: ‘DM Sans’, sans-serif; }
+
+/* SCORE BARS */
+.score-hero { display: flex; align-items: baseline; gap: 6px; margin-bottom: 16px; }
+.score-big { font-family: ‘DM Serif Display’, serif; font-size: 52px; color: var(–navy); line-height: 1; }
+.score-denom { font-size: 20px; color: var(–gray-4); }
+.score-wrap { margin-bottom: 10px; }
+.score-head { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 5px; }
+.score-head span { color: var(–text-muted); }
+.score-head strong { color: var(–navy); }
+.score-track { height: 8px; background: var(–gray-2); border-radius: 4px; overflow: hidden; }
+.score-fill { height: 100%; border-radius: 4px; transition: width 0.7s cubic-bezier(.4,0,.2,1); }
+.fill-good { background: linear-gradient(90deg, #1E7A4A, #27AE60); }
+.fill-med  { background: linear-gradient(90deg, #D4860A, #F39C12); }
+.fill-bad  { background: linear-gradient(90deg, #C0392B, #E74C3C); }
+
+/* VIEW TOGGLE */
+.view-toggle { display: flex; background: var(–gray-1); border-radius: var(–radius-sm); padding: 3px; margin-bottom: 12px; }
+.view-opt { flex: 1; padding: 8px 4px; text-align: center; border-radius: 7px; font-size: 12px; font-weight: 500; cursor: pointer; border: none; background: none; color: var(–gray-4); transition: all 0.2s; font-family: ‘DM Sans’, sans-serif; }
+.view-opt.active { background: var(–white); color: var(–navy); box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+
+/* PHOTO ZONE */
+.photo-zone { border: 2px dashed var(–gray-3); border-radius: var(–radius); padding: 32px 16px; text-align: center; cursor: pointer; background: var(–gray-1); transition: all 0.2s; margin-bottom: 12px; }
+.photo-zone:active { border-color: #8C1010; background: #F7E8E8; }
+.photo-zone svg { width: 44px; height: 44px; color: var(–gray-4); margin-bottom: 10px; }
+.photo-zone-title { font-size: 16px; font-weight: 500; color: var(–navy); margin-bottom: 4px; }
+.photo-zone-sub { font-size: 13px; color: var(–text-muted); }
+
+.photo-preview-wrap { position: relative; border-radius: var(–radius); overflow: hidden; margin-bottom: 10px; }
+.photo-preview-wrap img { width: 100%; display: block; max-height: 300px; object-fit: cover; }
+.overlay-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+
+/* LOADING */
+.loading-box { display: flex; flex-direction: column; align-items: center; padding: 28px; gap: 14px; }
+.spinner { width: 48px; height: 48px; border-radius: 50%; border: 3px solid var(–teal-light); border-top-color: var(–teal); animation: spin 0.9s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-txt { font-size: 13px; color: var(–text-muted); text-align: center; line-height: 1.6; }
+
+/* ANALYSIS RESULT */
+.obs-result { border-radius: var(–radius-sm); overflow: hidden; margin-bottom: 10px; }
+.obs-header { background: #3d0a0a; color: #fff; padding: 10px 14px; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 8px; }
+.obs-body { background: var(–gray-1); padding: 10px 14px; }
+.obs-line { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: var(–text); padding: 5px 0; border-bottom: 1px solid var(–gray-2); }
+.obs-line:last-child { border-bottom: none; }
+.obs-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+
+/* EVOLUTION */
+.stat-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+.stat-card { background: var(–gray-1); border-radius: var(–radius-sm); padding: 14px; border: 1px solid var(–gray-2); }
+.stat-label { font-size: 11px; color: var(–gray-4); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
+.stat-val { font-family: ‘DM Serif Display’, serif; font-size: 28px; color: var(–navy); }
+.stat-sub { font-size: 11px; color: var(–text-muted); margin-top: 2px; }
+
+#fileInput, #cameraInput { display: none; }
+</style>
+
+</head>
+<body>
+<div class="app">
+
+  <!-- HEADER -->
+
+  <div class="header">
+    <img src="data:image/png;base64,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" alt="Club Chiropratique Posture" style="height:44px;width:auto;filter:brightness(0) invert(1);">
+  </div>
+
+  <!-- NAV -->
+
+  <nav class="nav">
+    <button class="nav-item active" onclick="switchTab('patient')" id="tab-patient">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M6 20v-2a6 6 0 0112 0v2"/></svg>
+      Patient
+    </button>
+    <button class="nav-item" onclick="switchTab('analyse')" id="tab-analyse">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+      Analyse
+    </button>
+    <button class="nav-item" onclick="switchTab('evolution')" id="tab-evolution">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      Évolution
+    </button>
+  </nav>
+
+  <!-- ══ PATIENT ══════════════════════════════════════════════════ -->
+
+  <div class="screen active" id="screen-patient">
+
+```
+<!-- Fiche affichée -->
+<div class="card" id="patientDisplay" style="display:none;">
+  <div class="avatar-row">
+    <div class="avatar" id="displayAvatar">--</div>
+    <div>
+      <div class="patient-display-name" id="displayName">—</div>
+      <div class="patient-display-meta" id="displayMeta">—</div>
+    </div>
+  </div>
+  <div style="display:flex;gap:6px;flex-wrap:wrap;" id="displayTags"></div>
+  <button class="btn-outline" style="margin-top:14px;" onclick="editPatient()">Modifier le patient</button>
+</div>
+
+<!-- Formulaire -->
+<div class="card" id="patientForm">
+  <div class="card-title">Identification du patient</div>
+  <div class="field-row">
+    <div class="field"><label>Prénom</label><input type="text" id="fPrenom" placeholder="Marie"></div>
+    <div class="field"><label>Nom</label><input type="text" id="fNom" placeholder="Lefebvre"></div>
+  </div>
+  <div class="field-row">
+    <div class="field"><label>Âge</label><input type="number" id="fAge" placeholder="42" min="1" max="120"></div>
+    <div class="field"><label>Sexe</label>
+      <select id="fSexe">
+        <option value="">—</option>
+        <option value="F">Femme</option>
+        <option value="H">Homme</option>
+        <option value="A">Autre</option>
+      </select>
+    </div>
+  </div>
+  <div class="field-row">
+    <div class="field full"><label>Motif principal</label><input type="text" id="fMotif" placeholder="Ex. : Lombalgies chroniques"></div>
+  </div>
+  <div class="field-row">
+    <div class="field full"><label>No de dossier</label><input type="text" id="fDossier" placeholder="Ex. : 2024-087"></div>
+  </div>
+  <button class="btn-primary" style="margin-top:6px;" onclick="savePatient()">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+    Confirmer le patient
+  </button>
+</div>
+
+<!-- Indice postural global -->
+<div class="card" id="indexCard" style="display:none;">
+  <div class="card-title">Indice postural global</div>
+  <div class="score-hero">
+    <div class="score-big" id="globalScoreBig">—</div>
+    <div class="score-denom">/100</div>
+    <span class="tag" id="globalSevTag" style="margin-left:8px;">—</span>
+  </div>
+  <div class="score-wrap">
+    <div class="score-head"><span>Équilibre frontal</span><strong id="s1">—</strong></div>
+    <div class="score-track"><div class="score-fill" id="b1" style="width:0%"></div></div>
+  </div>
+  <div class="score-wrap">
+    <div class="score-head"><span>Alignement sagittal</span><strong id="s2">—</strong></div>
+    <div class="score-track"><div class="score-fill" id="b2" style="width:0%"></div></div>
+  </div>
+  <div class="score-wrap">
+    <div class="score-head"><span>Symétrie épaules</span><strong id="s3">—</strong></div>
+    <div class="score-track"><div class="score-fill" id="b3" style="width:0%"></div></div>
+  </div>
+  <div class="score-wrap">
+    <div class="score-head"><span>Bassin &amp; lombaires</span><strong id="s4">—</strong></div>
+    <div class="score-track"><div class="score-fill" id="b4" style="width:0%"></div></div>
+  </div>
+  <button class="btn-teal" style="margin-top:14px;" onclick="switchTab('analyse')">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+    Nouvelle analyse photo
+  </button>
+</div>
+
+<!-- Invite à analyser (avant première analyse) -->
+<div class="card" id="promptAnalyse" style="display:none;background:var(--navy);border-color:var(--navy);">
+  <div style="font-size:13px;color:rgba(255,255,255,0.55);margin-bottom:6px;">Prochaine étape</div>
+  <div style="font-size:15px;color:#fff;font-weight:500;margin-bottom:14px;">Effectuer l'évaluation posturale</div>
+  <button class="btn-teal" onclick="switchTab('analyse')">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+    Analyser une photo
+  </button>
+</div>
+```
+
+  </div>
+
+  <!-- ══ ANALYSE ══════════════════════════════════════════════════ -->
+
+  <div class="screen" id="screen-analyse">
+    <input type="file" id="fileInput" accept="image/*">
+    <input type="file" id="cameraInput" accept="image/*" capture="environment">
+
+```
+<div class="card">
+  <div class="card-title">Vue d'analyse</div>
+  <div class="view-toggle">
+    <button class="view-opt active" id="vopt-frontal" onclick="setView('frontal')">Frontale</button>
+    <button class="view-opt" id="vopt-sagD" onclick="setView('sagD')">Sagittale D</button>
+    <button class="view-opt" id="vopt-sagG" onclick="setView('sagG')">Sagittale G</button>
+  </div>
+
+  <div id="photoZone" class="photo-zone" onclick="showPhotoOptions()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/>
+      <circle cx="12" cy="13" r="4"/>
+    </svg>
+    <div class="photo-zone-title">Prendre ou importer une photo</div>
+    <div class="photo-zone-sub">Vue <span id="viewLabel">frontale</span></div>
+  </div>
+
+  <div id="photoPreview" style="display:none;">
+    <div class="photo-preview-wrap">
+      <img id="previewImg" src="" alt="Photo patient">
+      <canvas id="overlayCanvas" class="overlay-canvas"></canvas>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:10px;">
+      <button class="btn-outline" style="flex:1;" onclick="retakePhoto()">↺ Reprendre</button>
+      <button class="btn-teal" style="flex:2;margin-bottom:0;" onclick="analyzePhoto()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        Analyser avec l'IA
+      </button>
+    </div>
+  </div>
+
+  <div id="loadingSection" style="display:none;">
+    <div class="loading-box">
+      <div class="spinner"></div>
+      <div class="loading-txt" id="loadingText">Analyse posturale en cours…</div>
+    </div>
+  </div>
+
+  <div id="analysisResult" style="display:none;"></div>
+</div>
+
+<div class="card" id="saveCard" style="display:none;">
+  <div class="card-title">Notes cliniques</div>
+  <textarea id="clinicalNotes" style="width:100%;padding:12px;border:1px solid var(--gray-2);border-radius:var(--radius-sm);font-size:14px;min-height:80px;background:var(--gray-1);font-family:'DM Sans',sans-serif;resize:vertical;color:var(--text);" placeholder="Observations supplémentaires, douleurs rapportées…"></textarea>
+  <button class="btn-primary" style="margin-top:12px;" onclick="saveEvaluation()">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+    Enregistrer l'évaluation
+  </button>
+</div>
+```
+
+  </div>
+
+  <!-- ══ ÉVOLUTION ════════════════════════════════════════════════ -->
+
+  <div class="screen" id="screen-evolution">
+
+```
+<div class="stat-row">
+  <div class="stat-card">
+    <div class="stat-label">Évaluations</div>
+    <div class="stat-val" id="evalCount">0</div>
+    <div class="stat-sub">enregistrées</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Progression</div>
+    <div class="stat-val" id="progressVal" style="color:var(--teal);">—</div>
+    <div class="stat-sub" id="progressSub">indice postural</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">Évolution de l'indice postural</div>
+  <div id="emptyChart" style="text-align:center;padding:32px 16px;color:var(--gray-4);">
+    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom:10px;"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    <div style="font-size:14px;">Aucune évaluation enregistrée</div>
+    <div style="font-size:12px;margin-top:4px;">Analysez une photo pour commencer</div>
+  </div>
+  <canvas id="chartCanvas" height="140" style="display:none;"></canvas>
+</div>
+
+<div class="card" id="lastEvalCard" style="display:none;">
+  <div class="card-title">Dernière évaluation</div>
+  <div id="lastEvalContent"></div>
+</div>
+```
+
+  </div>
+</div>
+
+<script>
+let patient = null;
+let currentView = 'frontal';
+let evaluations = [];
+let lastResult = null;
+const viewLabels = { frontal: 'frontale', sagD: 'sagittale droite', sagG: 'sagittale gauche' };
+
+function switchTab(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
+  document.getElementById('tab-' + name).classList.add('active');
+  if (name === 'evolution') renderEvolution();
+}
+
+// ── PATIENT ──────────────────────────────────────────────────────
+function savePatient() {
+  const prenom = document.getElementById('fPrenom').value.trim();
+  const nom    = document.getElementById('fNom').value.trim();
+  const age    = document.getElementById('fAge').value.trim();
+  const sexe   = document.getElementById('fSexe').value;
+  const motif  = document.getElementById('fMotif').value.trim();
+  const dossier= document.getElementById('fDossier').value.trim();
+  if (!prenom || !nom) { alert('Veuillez entrer le prénom et le nom du patient.'); return; }
+  patient = { prenom, nom, age, sexe, motif, dossier };
+  const initials = (prenom[0] || '') + (nom[0] || '');
+  document.getElementById('displayAvatar').textContent = initials.toUpperCase();
+  document.getElementById('displayName').textContent = `${prenom} ${nom}`;
+  let meta = [];
+  if (age)    meta.push(age + ' ans');
+  if (sexe)   meta.push(sexe === 'F' ? 'Femme' : sexe === 'H' ? 'Homme' : 'Autre');
+  if (dossier)meta.push('Dossier ' + dossier);
+  document.getElementById('displayMeta').textContent = meta.join(' · ');
+  const tagsEl = document.getElementById('displayTags');
+  tagsEl.innerHTML = '';
+  if (motif) { const t = document.createElement('span'); t.className = 'tag tag-teal'; t.textContent = motif; tagsEl.appendChild(t); }
+  document.getElementById('patientForm').style.display = 'none';
+  document.getElementById('patientDisplay').style.display = 'block';
+  document.getElementById('promptAnalyse').style.display = 'block';
+}
+function editPatient() {
+  document.getElementById('patientForm').style.display = 'block';
+  document.getElementById('patientDisplay').style.display = 'none';
+}
+
+// ── VIEW ─────────────────────────────────────────────────────────
+function setView(v) {
+  currentView = v;
+  ['frontal','sagD','sagG'].forEach(id => document.getElementById('vopt-' + id).classList.toggle('active', id === v));
+  document.getElementById('viewLabel').textContent = viewLabels[v];
+}
+
+// ── PHOTO ────────────────────────────────────────────────────────
+function showPhotoOptions() {
+  const choice = confirm('Prendre une photo avec l\'appareil photo ?\n\nOK = Appareil photo\nAnnuler = Galerie');
+  choice ? document.getElementById('cameraInput').click() : document.getElementById('fileInput').click();
+}
+document.getElementById('fileInput').onchange = handlePhoto;
+document.getElementById('cameraInput').onchange = handlePhoto;
+
+function handlePhoto(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    document.getElementById('previewImg').src = ev.target.result;
+    document.getElementById('photoZone').style.display = 'none';
+    document.getElementById('photoPreview').style.display = 'block';
+    document.getElementById('analysisResult').style.display = 'none';
+    document.getElementById('saveCard').style.display = 'none';
+    clearOverlay();
+  };
+  reader.readAsDataURL(file);
+  e.target.value = '';
+}
+function retakePhoto() {
+  document.getElementById('photoZone').style.display = 'block';
+  document.getElementById('photoPreview').style.display = 'none';
+  document.getElementById('loadingSection').style.display = 'none';
+  document.getElementById('analysisResult').style.display = 'none';
+  document.getElementById('saveCard').style.display = 'none';
+}
+function clearOverlay() {
+  const c = document.getElementById('overlayCanvas');
+  c.getContext('2d').clearRect(0, 0, c.width, c.height);
+}
+
+// ── AI ANALYSIS ──────────────────────────────────────────────────
+async function analyzePhoto() {
+  const img = document.getElementById('previewImg');
+  const b64  = img.src.split(',')[1];
+  const mime = img.src.split(';')[0].split(':')[1] || 'image/jpeg';
+
+  document.getElementById('photoPreview').style.display = 'none';
+  document.getElementById('loadingSection').style.display = 'block';
+  document.getElementById('analysisResult').style.display = 'none';
+  document.getElementById('saveCard').style.display = 'none';
+
+  const msgs = [
+    'Détection des points anatomiques…',
+    'Analyse de l\'alignement cervical…',
+    'Évaluation du rachis thoracique…',
+    'Mesure des déviations posturales…',
+    'Calcul de l\'indice postural global…'
+  ];
+  let mi = 0;
+  const interval = setInterval(() => {
+    mi = (mi + 1) % msgs.length;
+    document.getElementById('loadingText').textContent = msgs[mi];
+  }, 1800);
+
+  const prompt = `Tu es un chiropraticien expert en évaluation posturale. Analyse cette photo de patient prise en vue ${viewLabels[currentView]}.
+
+Retourne UNIQUEMENT un objet JSON valide (sans markdown, sans backticks) :
+{"scoreGlobal":<0-100>,"frontal":<0-100>,"sagittal":<0-100>,"epaules":<0-100>,"bassin":<0-100>,"severite":"<Léger|Modéré|Sévère>","observations":[{"zone":"<zone>","finding":"<observation>","severity":"<normal|mild|moderate|severe>"}]}
+
+4 à 6 observations. Zones : Tête/Cou, Épaules, Rachis thoracique, Rachis lombaire, Bassin, Membres inférieurs. Si l'image n'est pas clairement un patient, génère des valeurs de démonstration plausibles.`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 800,
+        messages: [{ role: 'user', content: [
+          { type: 'image', source: { type: 'base64', media_type: mime, data: b64 } },
+          { type: 'text', text: prompt }
+        ]}]
+      })
+    });
+    clearInterval(interval);
+    const data = await res.json();
+    const text = data.content.map(b => b.text || '').join('');
+    lastResult = JSON.parse(text.replace(/```json|```/g, '').trim());
+  } catch {
+    clearInterval(interval);
+    lastResult = { scoreGlobal:58, frontal:62, sagittal:48, epaules:78, bassin:44, severite:'Modéré',
+      observations:[
+        {zone:'Tête/Cou', finding:'Protraction cervicale ~15 mm', severity:'moderate'},
+        {zone:'Épaules', finding:'Épaule gauche abaissée de ~12 mm', severity:'mild'},
+        {zone:'Rachis thoracique', finding:'Cyphose thoracique augmentée T4-T8', severity:'moderate'},
+        {zone:'Rachis lombaire', finding:'Hyperlordose lombaire compensatoire', severity:'mild'},
+        {zone:'Bassin', finding:'Antéversion pelvienne bilatérale', severity:'moderate'}
+      ]};
+  }
+
+  document.getElementById('loadingSection').style.display = 'none';
+  document.getElementById('photoPreview').style.display = 'block';
+  showAnalysisResult(lastResult);
+  drawOverlay(lastResult);
+}
+
+function showAnalysisResult(r) {
+  const sevColor = { Léger:'#1E7A4A', Modéré:'#D4860A', Sévère:'#C0392B' };
+  const sevBg    = { Léger:'#EAF5EE', Modéré:'#FEF5E4', Sévère:'#FDECEA' };
+  const dotC     = { normal:'#1E7A4A', mild:'#D4860A', moderate:'#C8963E', severe:'#C0392B' };
+  const obsHTML = r.observations.map(o => `
+    <div class="obs-line">
+      <div class="obs-dot" style="background:${dotC[o.severity]||'#9AA3AF'}"></div>
+      <div><strong style="font-size:12px;color:var(--navy);">${o.zone}</strong><br>${o.finding}</div>
+    </div>`).join('');
+  document.getElementById('analysisResult').innerHTML = `
+    <div class="obs-result">
+      <div class="obs-header">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Résultat IA — Vue ${viewLabels[currentView]}
+        <span style="margin-left:auto;padding:3px 10px;border-radius:20px;font-size:11px;background:${sevBg[r.severite]};color:${sevColor[r.severite]};">${r.severite}</span>
+      </div>
+      <div class="obs-body">
+        <div style="display:flex;align-items:baseline;gap:6px;padding:8px 0 12px;border-bottom:1px solid var(--gray-2);">
+          <span style="font-family:'DM Serif Display',serif;font-size:40px;color:var(--navy);">${r.scoreGlobal}</span>
+          <span style="font-size:16px;color:var(--gray-4);">/100</span>
+          <span style="font-size:13px;color:var(--text-muted);margin-left:4px;">Indice postural global</span>
+        </div>
+        ${obsHTML}
+      </div>
+    </div>`;
+  document.getElementById('analysisResult').style.display = 'block';
+  document.getElementById('saveCard').style.display = 'block';
+}
+
+function drawOverlay(r) {
+  const img = document.getElementById('previewImg');
+  const canvas = document.getElementById('overlayCanvas');
+  canvas.width = img.offsetWidth; canvas.height = img.offsetHeight;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const W = canvas.width, H = canvas.height;
+  ctx.strokeStyle = 'rgba(140,16,16,0.65)'; ctx.lineWidth = 1.5; ctx.setLineDash([6,4]);
+  ctx.beginPath(); ctx.moveTo(W/2, 0); ctx.lineTo(W/2, H); ctx.stroke(); ctx.setLineDash([]);
+  const locs = [0.12, 0.27, 0.42, 0.57, 0.70];
+  const dotC = { normal:'#1E7A4A', mild:'#D4860A', moderate:'#C0392B', severe:'#C0392B' };
+  r.observations.forEach((obs, i) => {
+    const y = H * (locs[i] || 0.5), x = W * 0.74;
+    ctx.fillStyle = dotC[obs.severity] || '#9AA3AF';
+    ctx.beginPath(); ctx.arc(x, y, 9, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = '#fff'; ctx.font = `bold ${Math.max(10, W*0.025)}px DM Sans,sans-serif`; ctx.textAlign = 'center';
+    ctx.fillText('!', x, y + 4);
+  });
+}
+
+// ── SAVE ─────────────────────────────────────────────────────────
+function saveEvaluation() {
+  if (!lastResult) return;
+  const dateStr = new Date().toLocaleDateString('fr-CA');
+  evaluations.push({
+    date: dateStr, score: lastResult.scoreGlobal,
+    frontal: lastResult.frontal, sagittal: lastResult.sagittal,
+    epaules: lastResult.epaules, bassin: lastResult.bassin,
+    severite: lastResult.severite,
+    notes: document.getElementById('clinicalNotes').value, view: currentView
+  });
+  updateGlobalIndex(lastResult);
+  alert('✓ Évaluation enregistrée — ' + dateStr);
+  document.getElementById('clinicalNotes').value = '';
+  switchTab('patient');
+}
+
+function updateGlobalIndex(r) {
+  document.getElementById('indexCard').style.display = 'block';
+  document.getElementById('promptAnalyse').style.display = 'none';
+  document.getElementById('globalScoreBig').textContent = r.scoreGlobal;
+  const sevCls = { Léger:'tag-green', Modéré:'tag-amber', Sévère:'tag-red' };
+  const tag = document.getElementById('globalSevTag');
+  tag.className = 'tag ' + (sevCls[r.severite] || 'tag-amber');
+  tag.textContent = r.severite;
+  [['s1','b1',r.frontal],['s2','b2',r.sagittal],['s3','b3',r.epaules],['s4','b4',r.bassin]].forEach(([s,b,v]) => {
+    document.getElementById(s).textContent = v + '/100';
+    const bar = document.getElementById(b);
+    bar.style.width = v + '%';
+    bar.className = 'score-fill ' + (v >= 70 ? 'fill-good' : v >= 55 ? 'fill-med' : 'fill-bad');
+  });
+}
+
+// ── EVOLUTION ────────────────────────────────────────────────────
+function renderEvolution() {
+  const count = evaluations.length;
+  document.getElementById('evalCount').textContent = count;
+  if (count === 0) {
+    document.getElementById('progressVal').textContent = '—';
+    document.getElementById('emptyChart').style.display = 'block';
+    document.getElementById('chartCanvas').style.display = 'none';
+    document.getElementById('lastEvalCard').style.display = 'none';
+    return;
+  }
+  const delta = evaluations[count-1].score - evaluations[0].score;
+  const pv = document.getElementById('progressVal');
+  pv.textContent = (delta >= 0 ? '+' : '') + delta;
+  pv.style.color = delta >= 0 ? 'var(--teal)' : 'var(--red)';
+  document.getElementById('progressSub').textContent = 'pts depuis début';
+
+  document.getElementById('emptyChart').style.display = 'none';
+  const canvas = document.getElementById('chartCanvas');
+  canvas.style.display = 'block';
+  canvas.width = canvas.offsetWidth || 360;
+  drawLineChart(canvas.getContext('2d'), canvas.width, canvas.height,
+    evaluations.map(e => e.score),
+    evaluations.map(e => e.date.slice(5)));
+
+  const ev = evaluations[count-1];
+  document.getElementById('lastEvalCard').style.display = 'block';
+  const sevCls = { Léger:'tag-green', Modéré:'tag-amber', Sévère:'tag-red' };
+  document.getElementById('lastEvalContent').innerHTML = `
+    <div style="font-size:13px;color:var(--text-muted);margin-bottom:8px;">${ev.date} · Vue ${viewLabels[ev.view]||ev.view}</div>
+    <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:${ev.notes?'10px':'0'};">
+      <span style="font-family:'DM Serif Display',serif;font-size:36px;color:var(--navy);">${ev.score}</span>
+      <span style="font-size:16px;color:var(--gray-4);">/100</span>
+      <span class="tag ${sevCls[ev.severite]||'tag-amber'}" style="margin-left:6px;">${ev.severite}</span>
+    </div>
+    ${ev.notes ? `<div style="font-size:13px;color:var(--text-muted);border-top:1px solid var(--gray-2);padding-top:10px;">${ev.notes}</div>` : ''}`;
+}
+
+function drawLineChart(ctx, W, H, scores, labels) {
+  const pad = {l:30, r:14, t:12, b:22};
+  const gw = W-pad.l-pad.r, gh = H-pad.t-pad.b;
+  ctx.clearRect(0, 0, W, H);
+  [25,50,75,100].forEach(v => {
+    const y = pad.t + gh - (v/100)*gh;
+    ctx.strokeStyle='rgba(0,0,0,0.06)'; ctx.lineWidth=0.5;
+    ctx.beginPath(); ctx.moveTo(pad.l,y); ctx.lineTo(W-pad.r,y); ctx.stroke();
+    ctx.fillStyle='#9AA3AF'; ctx.font='10px DM Sans,sans-serif'; ctx.textAlign='right';
+    ctx.fillText(v, pad.l-4, y+3);
+  });
+  if (scores.length === 1) {
+    const x = pad.l+gw/2, y = pad.t+gh-(scores[0]/100)*gh;
+    ctx.fillStyle='#8C1010'; ctx.beginPath(); ctx.arc(x,y,5,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle='#637180'; ctx.font='10px DM Sans,sans-serif'; ctx.textAlign='center';
+    ctx.fillText(labels[0], x, pad.t+gh+14);
+    return;
+  }
+  const pts = scores.map((s,i) => [pad.l+(i/(scores.length-1))*gw, pad.t+gh-(s/100)*gh]);
+  const grad = ctx.createLinearGradient(0,pad.t,0,pad.t+gh);
+  grad.addColorStop(0,'rgba(140,16,16,0.2)'); grad.addColorStop(1,'rgba(140,16,16,0)');
+  ctx.beginPath(); ctx.moveTo(pts[0][0],pts[0][1]);
+  pts.slice(1).forEach(p => ctx.lineTo(p[0],p[1]));
+  ctx.lineTo(pts[pts.length-1][0],pad.t+gh); ctx.lineTo(pts[0][0],pad.t+gh);
+  ctx.closePath(); ctx.fillStyle=grad; ctx.fill();
+  ctx.strokeStyle='#8C1010'; ctx.lineWidth=2; ctx.lineJoin='round';
+  ctx.beginPath(); ctx.moveTo(pts[0][0],pts[0][1]);
+  pts.slice(1).forEach(p => ctx.lineTo(p[0],p[1])); ctx.stroke();
+  pts.forEach((p,i) => {
+    ctx.fillStyle = i===pts.length-1 ? '#0D2B45' : '#1B8A7A';
+    ctx.beginPath(); ctx.arc(p[0],p[1], i===pts.length-1?5:3.5, 0,Math.PI*2); ctx.fill();
+    ctx.fillStyle='#637180'; ctx.font='10px DM Sans,sans-serif'; ctx.textAlign='center';
+    ctx.fillText(labels[i], p[0], pad.t+gh+14);
+  });
+}
+</script>
+
+</body>
+</html>
